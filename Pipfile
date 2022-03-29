@@ -20,6 +20,7 @@ faker = "*"
 django-pure-pagination = "*"
 django-haystack = "*"
 elasticsearch = ">=2,<3"
+gunicorn = "*"
 
 [dev-packages]
 
