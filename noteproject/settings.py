@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from .common import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,6 +30,8 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost ', '.wudaonote.com', '192.168.226.10']
 
 # Application definition
 
+HAYSTACK_CONNECTIONS['default']['URL'] = 'http://note_k8s__elasticsearch:9200/'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'pure_pagination', # 分页
     'note.apps.NoteConfig',     # 注册note应用
     'comments.apps.CommentsConfig',     #注册comments应用
+    'haystack'
 ]
 
 # django-pure-pagination 分页设置
