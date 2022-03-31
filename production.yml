@@ -3,6 +3,7 @@ version: '3'
 volumes:
   static:
   database:
+  esdata:
 
 services:
   note-k8s:
@@ -37,8 +38,8 @@ services:
     build:
       context: .
       dockerfile: ./compose/production/elasticsearch/Dockerfile
-    image: note_k8s
-    container_name: note_k8s
+    image: note_k8s_elasticsearch
+    container_name: note_k8s_elasticsearch
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:

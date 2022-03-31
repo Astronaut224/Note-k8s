@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'mzd_f7kb5*^=92lg_gs)zym4l@u3k75ud5423hg@4)wsdg!jgw'
+SECRET_KEY = '[django项目的SECRET_KEY]'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,7 +30,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost ', '.wudaonote.com', '192.168.226.10']
 
 # Application definition
 
-HAYSTACK_CONNECTIONS['default']['URL'] = 'http://note_k8s__elasticsearch:9200/'
+HAYSTACK_CONNECTIONS['default']['URL'] = 'http://note_k8s_elasticsearch:9200/'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
