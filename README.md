@@ -56,9 +56,12 @@ sudo usermod -aG docker ${USER}
 =================================================
 
 # 安装docker-compose
-sudo curl -L "https://github.com/docker/compose/releases/download/2.3.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-# 国内镜像地址
-curl -L https://get.daocloud.io/docker/compose/releases/download/1.29.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+yum -y install epel-release
+yum install python-pip
+cd /usr/local/bin
+
+wget https://github.com/docker/compose/releases/download/v2.4.1/docker-compose-linux-x86_64
+mv docker-compose-linux-x86_64 docker-compose
 
 # 给docker compose 目录授权
 sudo chmod +x /usr/local/bin/docker-compose
@@ -75,11 +78,12 @@ docker-compose version
 cd /home/wyh/src
 sudo yum install -y wget
 sudo yum install -y gcc-c++
+sudo yum install curl-devel -y
 sudo yum install -y zlib-devel perl-ExtUtils-MakeMaker
 wget https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.18.0.tar.gz
 tar -zxvf git-2.18.0.tar.gz
 cd git-2.18.0
-./configure --prefix=/usr/local/bin
+./configure --prefix=/usr/local
 make
 sudo make install
 git --version
@@ -104,4 +108,65 @@ docker-compose -f production.yml up
 ```
 
 
+
+5. 访问项目创建笔记需要用户，添加用户命令
+
+```bash
+docker exec -it note-k8s python manage.py createsuperuser
+```
+
+
+
+## 迁移到k8s
+
+通过kompose转换production.yml文件，先安装kompose
+
+```bash
+
+curl -L https://github.com/kubernetes/kompose/releases/download/v1.26.0/kompose-linux-amd64 -o kompose
+
+chmod +x kompose
+
+sudo mv ./kompose /usr/local/bin/kompose
+
+kompose version
+
+kompose convert -f docker-compose.yml 
+
+```
+
+安装好了执行yaml文件，如果报了错可能是kubernetes-master与本机没有绑定。
+
+```bash
+error:The connection to the server localhost:8080 was refused - did you specify the right host or port
+
+具体根据情况，此处记录linux设置该环境变量
+方式一：编辑文件设置
+	   vim /etc/profile
+	   在底部增加新的环境变量 export KUBECONFIG=/etc/kubernetes/admin.conf
+方式二:直接追加文件内容
+	echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> /etc/profile
+	source /etc/profile
+
+```
+
+此外kompose转换了有几个pvc文件，但是没有pv文件，所以要自己创建对应的pv文件。
+
+```bash
+vim xxx-persistentvolume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: esdata
+  labels:
+    type: local
+spec:
+  storageClassName: esdata
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+```
 
