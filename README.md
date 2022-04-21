@@ -170,3 +170,7 @@ spec:
     path: "/mnt/data"
 ```
 
+将得到的yaml文件根据自己的需求可以修改一些参数，然后最后执行Yaml文件即可：
+```bash
+kubectl apply -f xxx.yaml
+```
